@@ -1,0 +1,36 @@
+<!-- This element is exported from the file. -->
+<element name="some-el" export>
+	<internal-el>
+		<div>World</div>
+	</internal-el>
+
+	<style>
+		div {
+			border: 5px solid cornflowerblue;
+		}
+	</style>
+
+	<script>
+		export default class extends HTMLElement {
+			connectedCallback() {
+				console.log('some-el connected')
+			}
+		}
+	</script>
+</element>
+
+<!-- This element is not exported from the file, and it should be available only
+to other elements in this file (using scoped registries, TODO). -->
+<element name="internal-el">
+	<div>Hello</div>
+
+	<div>
+		<slot></slot>
+	</div>
+
+	<style>
+		div {
+			border: 5px solid pink;
+		}
+	</style>
+</element>

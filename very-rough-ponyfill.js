@@ -28,7 +28,7 @@ export async function import_concept(importSpecifier, attributes) {
 
 		// if no name, no automatic definition.
 		if (name) {
-			// TODO use scoped registry for the non-exported element (el-one) so it remains internal to el-two.
+			// TODO use scoped registry for the non-exported element (internal-el) so it remains internal to some-el.
 			// Perhaps try with the polyfill: https://github.com/webcomponents/polyfills/blob/master/packages/scoped-custom-element-registry
 			// const scopedElements = new CustomElementRegistry()
 
