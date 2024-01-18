@@ -37,7 +37,7 @@ Consumer in another element module file (or top level document HTML) imports the
 <cool-el></cool-el>
 
 <script type="module">
-  import './cool-el.html' with { type: 'elements', define: true }
+  import './cool-el.html' with { type: 'elements', define: true } // not sure if import attributes for auto defining is a good idea or not. What happens if multiple import statements to the same file auto define and don't auto define?
 </script>
 <!-- or -->
 <script type="elements" src="./cool-el.html" define></script>
