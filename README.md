@@ -10,3 +10,36 @@ rough idea.
 
 To run, just clone, and statically serve the files (f.e. `npx five-server .`
 with Node.js installed).
+
+# Example
+
+An element module file (`.html`) defines and exports an element:
+
+```html
+<element name="cool-el">
+  <div>Hello</div>
+
+  <div>
+    <slot></slot>
+  </div>
+
+  <style>
+    div {
+      border: 5px solid pink;
+    }
+  </style>
+</element>
+```
+
+Consumer in another element module file (or top level document HTML) imports the element and uses it:
+
+```html
+<cool-el></cool-el>
+
+<script type="module">
+  import './cool-el.html' with { type: 'elements', define: true }
+</script>
+<!-- or -->
+<script type="elements" src="./cool-el.html" define></script>
+<!-- or something -->
+```
