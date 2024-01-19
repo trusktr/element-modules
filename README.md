@@ -16,7 +16,7 @@ with Node.js installed).
 An element module file (`.html`) defines and exports an element:
 
 ```html
-<element name="cool-el">
+<element name="cool-el" export>
   <div>Hello</div>
 
   <div>
