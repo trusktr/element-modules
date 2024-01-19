@@ -4,11 +4,12 @@
 	import {import_concept} from './very-rough-ponyfill.js' // pretend this line does not exist
 
 	// import './elements/some-el.html' with {
-	//     type: 'elements', // or "html"? But maybe "html" just imports HTML as a document fragment or similar.
+	//     type: 'element',
 	//     define: true // define elements automatically
 	// }
 
-	// This is conceptual behavior for the above import statement (not how it would be
-	// implemented natively)
-	await import_concept('./elements/some-el.html', {with: {type: 'elements', define: true}})
+	// This is conceptual behavior for the above import statement (but not
+	// exactly how it would be implemented natively). Pretend this is a native
+	// `import()` call.
+	await import_concept('./elements/some-el.html', {with: {type: 'element', define: true}})
 </script>
