@@ -1,4 +1,5 @@
 // @ts-check
+import {html} from 'pota/src/renderer/@main.js'
 
 let bypassAttachShadowRestriction = false
 
@@ -72,7 +73,8 @@ export async function import_concept(importSpecifier, attributes) {
 					const root = this.attachShadow({mode: shadowMode /*, todo customElements: scopedElements */})
 					bypassAttachShadowRestriction = false
 
-					root.append(...Array.from(/**@type {HTMLElement}*/ (def.cloneNode(true)).children))
+					const render = eval(`() => html\`${def.innerHTML}\``)
+					root.append(...[render()].flat(Infinity))
 
 					return this.#internals
 				}

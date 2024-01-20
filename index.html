@@ -1,15 +1,23 @@
 <some-el></some-el>
 
+<!-- Pretend this importmap does not exist, it is only for dependencies of the ponyfill. -->
+<script type="importmap">
+	{
+		"imports": {
+			"pota/": "https://unpkg.com/pota@0.4.51/",
+			"solid-js/dist/solid.js": "https://unpkg.com/solid-js@1.8.11/dist/dev.js"
+		}
+	}
+</script>
+
 <script type="module">
-	import {import_concept} from './very-rough-ponyfill.js' // pretend this line does not exist
+	// Pretend this line does not exist. It is the "ponyfill" to make the concept possible.
+	import {import_concept} from './very-rough-ponyfill.js'
 
-	// import './elements/some-el.html' with {
-	//     type: 'element',
-	//     define: true // define elements automatically
-	// }
+	// Native import is not yet polyfilled.
+	// import './elements/some-el.html' with { type: 'element', define: true }
 
-	// This is conceptual behavior for the above import statement (but not
-	// exactly how it would be implemented natively). Pretend this is a native
-	// `import()` call.
+	// Pretend this is a native `await import()` call instead of an `await
+	// import_concept()` call, for sake of example.
 	await import_concept('./elements/some-el.html', {with: {type: 'element', define: true}})
 </script>

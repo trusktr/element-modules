@@ -4,6 +4,8 @@
 		<div>World</div>
 	</internal-el>
 
+	<p>Interpolated value: ${this.value}</p>
+
 	<style>
 		div {
 			border: 5px solid cornflowerblue;
@@ -12,12 +14,15 @@
 
 	<script>
 		export default class {
+			value = 123
+
 			connectedCallback() {
 				console.log('some-el connected')
 			}
 		}
 
-		// This is a rough concept, import.meta.url does not currently work as expected:
+		// This is a rough concept, import.meta.url does not currently work as
+		// expected:
 		// console.log(import.meta.url)
 	</script>
 </element>
