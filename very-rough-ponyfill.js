@@ -1,16 +1,26 @@
 // @ts-check
+
+// @ts-expect-error we're using this import inside the eval() below.
 import {html} from 'pota/src/renderer/@main.js'
+
+const moduleSpecifier = /(?:import|from)\s*['"](.+?)['"]/gm // regexr.com/7r66e
 
 let bypassAttachShadowRestriction = false
 
-export async function import_concept(importSpecifier, attributes) {
+export async function import_concept(importSpecifier, importAttributes) {
 	const htmlCode = await fetch(importSpecifier).then(r => r.text())
+
+	// Base URL so we can run the "element module" with the correct
+	// `import.meta.url` other things like relative URLs in the HTML code will
+	// also work, etc.
+	const htmlUrl = new URL(importSpecifier, import.meta.url).href
+	console.log(htmlUrl)
 
 	// Easy way to work with the code is to parse it into an AST :)
 	const parser = new DOMParser()
 	const doc = parser.parseFromString(htmlCode, 'text/html')
 
-	for (const def of /**@type {Array<HTMLElement>}*/ (Array.from(doc.querySelectorAll('element')))) {
+	for (const [i, def] of /**@type {Array<HTMLElement>}*/ (Array.from(doc.querySelectorAll('element'))).entries()) {
 		const elementName = def.getAttribute('name')
 
 		// if no name, no automatic definition (TODO derive from class name as fallback?)
@@ -28,6 +38,8 @@ export async function import_concept(importSpecifier, attributes) {
 
 			if (jsCode) {
 				jsCode = implyClassNameAndBaseClass(jsCode, elementName)
+				jsCode = implementImportMetaUrl(jsCode, htmlUrl)
+				jsCode = implementRelativeSpecifiers(jsCode, htmlUrl)
 
 				const scriptUrl = URL.createObjectURL(new Blob([jsCode], {type: 'application/javascript'}))
 				module = await import(scriptUrl)
@@ -51,8 +63,7 @@ export async function import_concept(importSpecifier, attributes) {
 			// `attachShadow`, the method will not error as it would if the
 			// root already pre-existed.
 			const Wrapper = class extends (Class ?? HTMLElement) {
-				// @ts-expect-error
-				static name = toCamelCase(/**@type {string}*/ (elementName))
+				static name = toCamelCase(elementName)
 
 				/** @type {ElementInternals} */
 				#internals
@@ -129,4 +140,39 @@ function implyClassNameAndBaseClass(jsCode, elementName) {
 	}
 
 	return jsCode
+}
+
+/**
+ * Replace `import.meta.url` with something actually usable (because we make
+ * modules out of blobs, and their native import.meta.url will be a blob: URL
+ * and hence relative paths will not work in cases like `new URL('./foo',
+ * import.meta.url)`).
+ *
+ * This is naive, for sake of example. It should use an AST so that it will not
+ * replace `import.meta.url` inside comments, strings, etc.
+ *
+ * @param {string} jsCode
+ * @param {string} baseUrl
+ */
+function implementImportMetaUrl(jsCode, baseUrl) {
+	return jsCode.replaceAll('import.meta.url', '"' + baseUrl + '"')
+}
+
+/**
+ * Replaces relative module specifiers with absolute URLs based on the path of
+ * the HTML file being imported.
+ *
+ * This is naive, for sake of example. It should not override any relative paths
+ * that are mapped in an importmap, but currently it will.
+ *
+ * @param {string} jsCode
+ * @param {string} baseUrl
+ */
+function implementRelativeSpecifiers(/**@type {string}*/ jsCode, /**@type {string}*/ baseUrl) {
+	return jsCode.replace(moduleSpecifier, (s, specifier) => {
+		console.log(s.replace(specifier, new URL(specifier, baseUrl).href))
+		const isRelative = specifier.startsWith('.')
+		if (isRelative) return s.replace(specifier, new URL(specifier, baseUrl).href)
+		else return s
+	})
 }

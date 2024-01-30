@@ -4,7 +4,8 @@
 		<div>World</div>
 	</internal-el>
 
-	<p>Interpolated value: ${this.value}</p>
+	<p>Interpolated value from the element instance: ${this.value}</p>
+	<p>Interpolated value from the module scope: $ {foo}</p>
 
 	<style>
 		div {
@@ -13,6 +14,10 @@
 	</style>
 
 	<script>
+		import {foo} from './foo.js'
+
+		console.log('import.meta. url:', import.meta.url)
+
 		export default class {
 			value = 123
 
@@ -20,10 +25,6 @@
 				console.log('some-el connected')
 			}
 		}
-
-		// This is a rough concept, import.meta.url does not currently work as
-		// expected:
-		// console.log(import.meta.url)
 	</script>
 </element>
 
