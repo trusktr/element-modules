@@ -40,6 +40,7 @@ export async function import_concept(importSpecifier, importAttributes) {
 			userCode = implementRelativeSpecifiers(userCode, htmlUrl)
 
 			const header = userCode.match(classHeader)[0]
+			console.log('header:', userCode)
 
 			// Place the template inside the user class definition so it can access private fields.
 			userCode = userCode.replace(
@@ -49,7 +50,10 @@ export async function import_concept(importSpecifier, importAttributes) {
                 [__TEMPLATE__] = () => html\`${def.innerHTML}\``,
 			)
 
+			console.log('updated code with __TEMPLATE__:', userCode)
+
 			const newHeader = header.replace('export default', 'const __DEFAULT_EXPORT__ =')
+			console.log('newHeader:', newHeader)
 			userCode = userCode.replace(header, newHeader)
 
 			userCode += /*js*/ `
