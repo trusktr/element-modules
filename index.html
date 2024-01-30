@@ -14,10 +14,10 @@
 	// Pretend this line does not exist. It is the "ponyfill" to make the concept possible.
 	import {import_concept} from './very-rough-ponyfill.js'
 
-	// Native import is not yet polyfilled.
+	// Native import is not yet polyfilled, but it could look something like this:
 	// import './elements/some-el.html' with { type: 'element', define: true }
 
-	// Pretend this is a native `await import()` call instead of an `await
+	// In lieu of native import, pretend this is a native `await import()` call instead of an `await
 	// import_concept()` call, for sake of example.
 	await import_concept('./elements/some-el.html', {with: {type: 'element', define: true}})
 </script>
