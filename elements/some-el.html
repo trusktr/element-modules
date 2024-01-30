@@ -9,6 +9,7 @@
 	<p>Interpolated value from global scope: <b>${document.body.tagName}</b></p>
 	<p>Interpolated value from class field: <b>${this.value}</b></p>
 	<p>Interpolated value from class private field: <b>${this.#privateValue}</b></p>
+	<p>Interpolated value from attribute: <b>${this.attributes['some-attribute'].value}</b></p>
 
 	<style>
 		div {

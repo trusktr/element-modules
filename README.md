@@ -11,13 +11,23 @@ rough idea.
 To run, just clone, and statically serve the files (f.e. `npx five-server .`
 with Node.js installed).
 
-# Example
+# Live Example
+
+[Demo on CodePen](https://codepen.io/trusktr/pen/gOEWGXV)
+
+# Basic Usage
 
 An element module file (`.html`) defines and exports an element:
 
 ```html
 <element name="cool-el" export>
   <div>Hello</div>
+
+  <span>Value from module scope: ${foo}</span>
+  <span>Value from global scope: ${document.body.tagName}</span>
+  <span>Value from class field: ${this.publicValue}</span>
+  <span>Value from class private field: ${this.#privateValue}</span>
+  <span>Value from attribute: ${this.attributes['some-attribute'].value}</span>
 
   <div>
     <slot></slot>
@@ -28,6 +38,20 @@ An element module file (`.html`) defines and exports an element:
       border: 5px solid pink;
     }
   </style>
+
+  <!-- Script tag is totally optional, only if you need logic. -->
+  <script>
+    import {foo} from 'somewhere'
+
+    export default class extends HTMLElement {
+      publicValue = 123
+      #privateValue = 456
+
+      connectedCallback() {
+        console.log('cool-el connected')
+      }
+    }
+  </script>
 </element>
 ```
 
