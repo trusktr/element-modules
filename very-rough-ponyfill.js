@@ -37,7 +37,6 @@ export async function import_concept(importSpecifier, importAttributes) {
 			let module = {}
 
 			if (jsCode) {
-				jsCode = implyClassNameAndBaseClass(jsCode, elementName)
 				jsCode = implementImportMetaUrl(jsCode, htmlUrl)
 				jsCode = implementRelativeSpecifiers(jsCode, htmlUrl)
 
@@ -115,31 +114,6 @@ export async function import_concept(importSpecifier, importAttributes) {
 /** @param {string} str */
 function toCamelCase(str) {
 	return str.replace(/-[a-zA-Z]/g, s => s[1].toUpperCase())
-}
-
-/**
- * @param {string} jsCode
- * @param {string} elementName
- */
-function implyClassNameAndBaseClass(jsCode, elementName) {
-	// Allows classes to implicitly extend from HTMLElement instead of
-	// Object if extends is not specified (this is naive, just for the
-	// concept, it assumes "export default class" to be at the top
-	// level), and imply the class name from the element name.
-	const classHeader = /export\s*default\s*class\s*([a-zA-Z]*)\s*(?:extends\s*([a-zA-Z]+))?\s*{/
-	const headerMatch = jsCode.match(classHeader)
-
-	if (headerMatch) {
-		const [className, baseClass] = headerMatch[1]
-		let header = headerMatch[0]
-
-		if (!baseClass) header = header.replace('{', 'extends HTMLElement {')
-		if (!className) header = header.replace('class', 'class ' + toCamelCase(elementName))
-
-		jsCode = jsCode.replace(headerMatch[0], header)
-	}
-
-	return jsCode
 }
 
 /**
