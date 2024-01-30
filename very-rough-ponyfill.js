@@ -10,7 +10,6 @@ export async function import_concept(importSpecifier, importAttributes) {
 	// `import.meta.url` other things like relative URLs in the HTML code will
 	// also work, etc.
 	const htmlUrl = new URL(importSpecifier, import.meta.url).href
-	console.log(htmlUrl)
 
 	// Easy way to work with the code is to parse it into an AST :)
 	const parser = new DOMParser()
@@ -40,7 +39,6 @@ export async function import_concept(importSpecifier, importAttributes) {
 			userCode = implementRelativeSpecifiers(userCode, htmlUrl)
 
 			const header = userCode.match(classHeader)[0]
-			console.log('header:', userCode)
 
 			// Place the template inside the user class definition so it can access private fields.
 			userCode = userCode.replace(
@@ -50,10 +48,7 @@ export async function import_concept(importSpecifier, importAttributes) {
                 [__TEMPLATE__] = () => html\`${def.innerHTML}\``,
 			)
 
-			console.log('updated code with __TEMPLATE__:', userCode)
-
 			const newHeader = header.replace('export default', 'const __DEFAULT_EXPORT__ =')
-			console.log('newHeader:', newHeader)
 			userCode = userCode.replace(header, newHeader)
 
 			userCode += /*js*/ `
@@ -169,7 +164,6 @@ function implementImportMetaUrl(jsCode, baseUrl) {
  */
 function implementRelativeSpecifiers(/**@type {string}*/ jsCode, /**@type {string}*/ baseUrl) {
 	return jsCode.replace(moduleSpecifier, (s, specifier) => {
-		console.log(s.replace(specifier, new URL(specifier, baseUrl).href))
 		const isRelative = specifier.startsWith('.')
 		if (isRelative) return s.replace(specifier, new URL(specifier, baseUrl).href)
 		else return s
