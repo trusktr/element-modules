@@ -67,3 +67,7 @@ Consumer in another element module file (or top level document HTML) imports the
 <script type="elements" src="./cool-el.html" define></script>
 <!-- or something -->
 ```
+
+# Community exploration
+
+For other concepts and prototypes of Declarative Custom Elements by the Web Components Community Group, see [this issue](https://github.com/w3c/webcomponents-cg/issues/80).
